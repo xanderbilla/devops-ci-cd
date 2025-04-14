@@ -1,23 +1,59 @@
 # DevOps Project
 
-This project consists of a Spring Boot backend and a Next.js 15.3 frontend, containerized with Docker.
+A full-stack application with Spring Boot backend and Next.js 15.3 frontend, containerized with Docker and deployed using Docker Compose.
 
-## Project Structure
+## 🚀 Features
 
-- `backend/`: Spring Boot application
-- `frontend/`: Next.js 15.3 application (requires Node.js v20)
-- `build-and-push.sh`: Script to build and push Docker images to Docker Hub
-- `deploy.sh`: Script to deploy the application using Docker Hub images
-- `docker-compose.yml`: Docker Compose configuration
-- `version.txt`: Version tracking file (created automatically)
+- Spring Boot backend with RESTful APIs
+- Next.js 15.3 frontend with modern UI
+- MongoDB database integration
+- Docker containerization
+- Automated build and deployment scripts
+- Version tracking system
 
-## Prerequisites
+## 📁 Project Structure
 
-- Docker and Docker Compose installed
+```
+.
+├── backend/           # Spring Boot application
+├── frontend/         # Next.js 15.3 application
+├── build-and-push.sh # Script to build and push Docker images
+├── deploy.sh         # Script to deploy the application
+├── docker-compose.yml# Docker Compose configuration
+└── version.txt       # Version tracking file
+```
+
+## ⚙️ Prerequisites
+
+- Docker and Docker Compose
 - Docker Hub account
 - Git (optional)
+- Node.js v20 (for local frontend development)
+- Java 17+ (for local backend development)
 
-## Setup
+## 🛠️ Local Development Setup
+
+### Backend Setup
+
+1. Navigate to the backend directory
+2. Run the Spring Boot application:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+
+### Frontend Setup
+
+1. Navigate to the frontend directory
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## 🐳 Docker Setup
 
 1. Edit the `build-and-push.sh` script to set your Docker Hub username:
 
@@ -30,7 +66,7 @@ This project consists of a Spring Boot backend and a Next.js 15.3 frontend, cont
    docker login
    ```
 
-## Building and Pushing Images
+## 🏗️ Building and Pushing Images
 
 To build and push the Docker images to Docker Hub:
 
@@ -42,17 +78,17 @@ To build and push the Docker images to Docker Hub:
 .\build-and-push.sh
 ```
 
-This script will:
+The script will:
 
-1. Create or update the version file
+1. Create/update the version file
 2. Increment the version number
 3. Build both backend and frontend images
-4. Tag images with both `latest` and the version number
+4. Tag images with `latest` and version number
 5. Push all images to Docker Hub
 
-## Deploying the Application
+## 🚀 Deployment
 
-To deploy the application using the Docker Hub images:
+To deploy the application:
 
 ```bash
 # On Linux/Mac
@@ -62,7 +98,7 @@ To deploy the application using the Docker Hub images:
 .\deploy.sh
 ```
 
-You can also specify a custom Docker Hub username and image tag:
+Custom deployment with specific username and tag:
 
 ```bash
 # On Linux/Mac
@@ -72,29 +108,64 @@ DOCKER_USERNAME=myusername IMAGE_TAG=1.0.0 ./deploy.sh
 $env:DOCKER_USERNAME="myusername"; $env:IMAGE_TAG="1.0.0"; .\deploy.sh
 ```
 
-## Accessing the Application
+## 🌐 Application Access
 
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8080
 - MongoDB: localhost:27017
+- API Documentation: http://localhost:8080/swagger-ui.html
 
-## Troubleshooting
+## 🔍 Troubleshooting
 
 ### Docker Build Issues
 
-If you encounter issues with the Docker build:
-
-1. Make sure you have the correct Node.js version installed (Node 20 for Next.js 15.3)
-2. Check that all required files are present in the project directories
-3. For the frontend, ensure that the Next.js configuration is correct
+1. Verify Node.js version (v20 required for Next.js 15.3)
+2. Check for required files in project directories
+3. Validate Next.js configuration
+4. Ensure Docker daemon is running
+5. Check available disk space
 
 ### Deployment Issues
 
-If you encounter issues with deployment:
-
-1. Check that the Docker Hub images exist and are accessible
-2. Verify that the version in version.txt matches an existing image tag
-3. Check Docker logs for any errors:
+1. Verify Docker Hub image accessibility
+2. Check version.txt matches existing image tags
+3. Inspect Docker logs:
    ```bash
    docker-compose logs
    ```
+4. Check container status:
+   ```bash
+   docker-compose ps
+   ```
+
+### Common Issues
+
+1. **Port Conflicts**
+
+   - Ensure ports 3000, 8080, and 27017 are available
+   - Check for running services on these ports
+
+2. **Memory Issues**
+
+   - Increase Docker memory limit if builds fail
+   - Check system resources
+
+3. **Network Issues**
+   - Verify Docker network connectivity
+   - Check firewall settings
+
+## 📝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🤝 Support
+
+For support, please open an issue in the repository or contact the maintainers.

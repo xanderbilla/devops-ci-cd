@@ -8,6 +8,7 @@ DOCKER_USERNAME="xanderbilla"
 BACKEND_IMAGE_NAME="devops-backend"
 FRONTEND_IMAGE_NAME="devops-frontend"
 VERSION_FILE="version.txt"
+NEXT_PUBLIC_API_URL="http://backend:8500"
 
 # Check if version file exists, create if not
 if [ ! -f "$VERSION_FILE" ]; then
@@ -31,11 +32,14 @@ echo "Updated version file to $NEW_VERSION"
 
 # Build backend image
 echo "Building backend image..."
-docker build -t "$DOCKER_USERNAME/$BACKEND_IMAGE_NAME:latest" -t "$DOCKER_USERNAME/$BACKEND_IMAGE_NAME:$NEW_VERSION" ./backend
+docker build -t "$DOCKER_USERNAME/$BACKEND_IMAGE_NAME:latest" \
+             -t "$DOCKER_USERNAME/$BACKEND_IMAGE_NAME:$NEW_VERSION" ./backend
 
-# Build frontend image
-echo "Building frontend image..."
-docker build -t "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:latest" -t "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:$NEW_VERSION" ./frontend
+# Build frontend image with build-time API URL
+echo "Building frontend image with NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL"
+docker build --build-arg NEXT_PUBLIC_API_URL="$NEXT_PUBLIC_API_URL" \
+             -t "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:latest" \
+             -t "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:$NEW_VERSION" ./frontend
 
 # Push backend images
 echo "Pushing backend images to Docker Hub..."
@@ -47,6 +51,6 @@ echo "Pushing frontend images to Docker Hub..."
 docker push "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:latest"
 docker push "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:$NEW_VERSION"
 
-echo "All images built and pushed successfully!"
-echo "Backend: $DOCKER_USERNAME/$BACKEND_IMAGE_NAME:$NEW_VERSION"
-echo "Frontend: $DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:$NEW_VERSION" 
+echo "✅ All images built and pushed successfully!"
+echo "🔗 Backend: $DOCKER_USERNAME/$BACKEND_IMAGE_NAME:$NEW_VERSION"
+echo "🔗 Frontend: $DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:$NEW_VERSION"

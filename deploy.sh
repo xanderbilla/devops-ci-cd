@@ -1,40 +1,27 @@
 #!/bin/bash
 
-# Exit on error
 set -e
 
 # Configuration
 DOCKER_USERNAME=${DOCKER_USERNAME:-"xanderbilla"}
-IMAGE_TAG=${IMAGE_TAG:-"latest"}
 VERSION_FILE="version.txt"
+STACK_NAME="devops-stack"
+COMPOSE_FILE="docker-compose.yml"
 
-# Check if version file exists
-if [ ! -f "$VERSION_FILE" ]; then
+# Determine version/tag
+if [ -f "$VERSION_FILE" ]; then
+  IMAGE_TAG=$(cat "$VERSION_FILE")
+else
   echo "Version file not found. Using 'latest' tag."
   IMAGE_TAG="latest"
-else
-  # Read current version
-  CURRENT_VERSION=$(cat "$VERSION_FILE")
-  echo "Using version: $CURRENT_VERSION"
-  IMAGE_TAG=$CURRENT_VERSION
 fi
 
-# Export environment variables for docker-compose
 export DOCKER_USERNAME
 export IMAGE_TAG
 
-echo "Deploying application with:"
-echo "Docker Username: $DOCKER_USERNAME"
-echo "Image Tag: $IMAGE_TAG"
+echo "Deploying stack '$STACK_NAME' with tag '$IMAGE_TAG'"
 
-# Pull the latest images
-echo "Pulling latest images..."
-docker-compose pull
+# Deploy using Docker Stack (Swarm)
+docker stack deploy -c "$COMPOSE_FILE" "$STACK_NAME"
 
-# Start the application
-echo "Starting application..."
-docker-compose up -d
-
-echo "Deployment completed successfully!"
-echo "Backend: $DOCKER_USERNAME/devops-backend:$IMAGE_TAG"
-echo "Frontend: $DOCKER_USERNAME/devops-frontend:$IMAGE_TAG" 
+echo "Deployment complete!"

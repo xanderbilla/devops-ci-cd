@@ -14,14 +14,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
   backend:
     image: ${DOCKER_USERNAME:-xanderbilla}/devops-backend:${IMAGE_TAG:-latest}
     ports:
       - "8500:8500"
     depends_on:
-      mongo:
-        condition: service_healthy
+      - mongo
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/devopsdb
     networks:

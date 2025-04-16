@@ -40,6 +40,8 @@ services:
       - "3000:80"
     depends_on:
       - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8500
     networks:
       - app-network
     deploy:

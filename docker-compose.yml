@@ -2,11 +2,11 @@ services:
   backend:
     image: ${DOCKER_USERNAME:-xanderbilla}/devops-backend:${IMAGE_TAG:-latest}
     ports:
-      - "8500:8500"
+      - "8500:8080"
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8500/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -4,9 +4,8 @@
 set -e
 
 # Configuration
-DOCKER_USERNAME="xanderbilla"
+DOCKER_USERNAME=${DOCKER_USERNAME:-"xanderbilla"}
 BACKEND_IMAGE_NAME="devops-backend"
-FRONTEND_IMAGE_NAME="devops-frontend"
 VERSION_FILE="version.txt"
 
 # Check if version file exists, create if not
@@ -33,24 +32,10 @@ echo "Updated version file to $NEW_VERSION"
 echo "Building backend image..."
 docker build -t "$DOCKER_USERNAME/$BACKEND_IMAGE_NAME:latest" -t "$DOCKER_USERNAME/$BACKEND_IMAGE_NAME:$NEW_VERSION" ./backend
 
-# Build frontend image
-echo "Building frontend image..."
-docker build -t "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:latest" -t "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:$NEW_VERSION" ./frontend
-
-
-
 # Push backend images
 echo "Pushing backend images to Docker Hub..."
 docker push "$DOCKER_USERNAME/$BACKEND_IMAGE_NAME:latest"
 docker push "$DOCKER_USERNAME/$BACKEND_IMAGE_NAME:$NEW_VERSION"
 
-# Push frontend images
-echo "Pushing frontend images to Docker Hub..."
-docker push "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:latest"
-docker push "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:$NEW_VERSION"
-
-echo "All images built and pushed successfully!"
-echo "Backend: $DOCKER_USERNAME/$BACKEND_IMAGE_NAME:$NEW_VERSION"
-echo "Frontend: $DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:$NEW_VERSION" 
-
-docker run -d -p 8500:8080 "$DOCKER_USERNAME/$BACKEND_IMAGE_NAME:latest"
+echo "Backend image built and pushed successfully!"
+echo "Backend: $DOCKER_USERNAME/$BACKEND_IMAGE_NAME:$NEW_VERSION" 

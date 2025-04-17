@@ -6,11 +6,10 @@ set -e
 # Configuration
 DOCKER_USERNAME=${DOCKER_USERNAME:-"xanderbilla"}
 VERSION_FILE="version.txt"
-STACK_NAME="devops-stack"
-COMPOSE_FILE="docker-compose.yml"
+STACK_NAME="devops-backend-stack"
+COMPOSE_FILE="docker-compose.backend.yml"
 JENKINS_HOST=${JENKINS_HOST:-"localhost"}
 BACKEND_PORT="8500"
-FRONTEND_PORT="3000"
 MONGO_PORT="27017"
 
 # Colors for output
@@ -109,6 +108,29 @@ wait_for_service() {
     return 1
 }
 
+# Function to check if a service is responding
+check_service_response() {
+    local service_name=$1
+    local url=$2
+    local max_attempts=12
+    local attempt=1
+    
+    print_message "$YELLOW" "⏳ Checking $service_name response..."
+    
+    while [ $attempt -le $max_attempts ]; do
+        if curl -s -f "$url" > /dev/null 2>&1; then
+            print_message "$GREEN" "✅ $service_name is responding"
+            return 0
+        fi
+        print_message "$YELLOW" "Attempt $attempt/$max_attempts: $service_name is not responding yet..."
+        sleep 5
+        attempt=$((attempt + 1))
+    done
+    
+    print_message "$RED" "❌ $service_name is not responding after $max_attempts attempts"
+    return 1
+}
+
 # Function to deploy the stack
 deploy_stack() {
     print_message "$YELLOW" "🚀 Deploying stack '$STACK_NAME'..."
@@ -124,7 +146,6 @@ deploy_stack() {
         # Wait for services to be healthy
         wait_for_service "mongo" || exit 1
         wait_for_service "backend" || exit 1
-        wait_for_service "frontend" || exit 1
     else
         print_message "$RED" "❌ Failed to deploy stack"
         exit 1
@@ -147,18 +168,7 @@ check_services() {
     fi
     
     # Check Backend
-    if curl -s "http://$JENKINS_HOST:$BACKEND_PORT/health" | grep -q "UP"; then
-        print_message "$GREEN" "✅ Backend is accessible"
-    else
-        print_message "$RED" "❌ Backend is not accessible"
-    fi
-    
-    # Check Frontend
-    if curl -s "http://$JENKINS_HOST:$FRONTEND_PORT" > /dev/null; then
-        print_message "$GREEN" "✅ Frontend is accessible"
-    else
-        print_message "$RED" "❌ Frontend is not accessible"
-    fi
+    check_service_response "Backend" "http://$JENKINS_HOST:$BACKEND_PORT/health"
 }
 
 # Main deployment process
@@ -182,5 +192,4 @@ main() {
 }
 
 # Run the main function
-main
-
+main 

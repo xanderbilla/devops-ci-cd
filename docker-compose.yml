@@ -28,9 +28,7 @@ services:
     depends_on:
       - mongo
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/devopsdb
-      - SPRING_PROFILES_ACTIVE=prod
-      - SERVER_ADDRESS=${JENKINS_HOST:-localhost}
+      - MONGODB_URI=mongodb://mongo:27017/devopsdb
     networks:
       - app-network
     healthcheck:

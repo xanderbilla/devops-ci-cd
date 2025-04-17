@@ -37,8 +37,6 @@ docker build -t "$DOCKER_USERNAME/$BACKEND_IMAGE_NAME:latest" -t "$DOCKER_USERNA
 echo "Building frontend image..."
 docker build -t "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:latest" -t "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:$NEW_VERSION" ./frontend
 
-
-
 # Push backend images
 echo "Pushing backend images to Docker Hub..."
 docker push "$DOCKER_USERNAME/$BACKEND_IMAGE_NAME:latest"
@@ -51,6 +49,4 @@ docker push "$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:$NEW_VERSION"
 
 echo "All images built and pushed successfully!"
 echo "Backend: $DOCKER_USERNAME/$BACKEND_IMAGE_NAME:$NEW_VERSION"
-echo "Frontend: $DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:$NEW_VERSION" 
-
-docker run -d -p 8500:8080 "$DOCKER_USERNAME/$BACKEND_IMAGE_NAME:latest"
+echo "Frontend: $DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:$NEW_VERSION"

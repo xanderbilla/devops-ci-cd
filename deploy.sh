@@ -142,6 +142,8 @@ check_services() {
         print_message "$GREEN" "✅ Backend is accessible"
     else
         print_message "$RED" "❌ Backend is not accessible"
+        print_message "$YELLOW" "Checking backend logs for more information..."
+        docker service logs "$STACK_NAME"_backend
     fi
     
     # Check Frontend

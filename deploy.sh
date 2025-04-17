@@ -11,7 +11,6 @@ COMPOSE_FILE="docker-compose.yml"
 JENKINS_HOST=${JENKINS_HOST:-"localhost"}
 BACKEND_PORT="8500"
 FRONTEND_PORT="3000"
-MONGO_PORT="27017"
 
 # Colors for output
 RED='\033[0;31m'
@@ -122,7 +121,6 @@ deploy_stack() {
         print_message "$GREEN" "✅ Stack deployed successfully"
         
         # Wait for services to be healthy
-        wait_for_service "mongo" || exit 1
         wait_for_service "backend" || exit 1
         wait_for_service "frontend" || exit 1
     else
@@ -138,13 +136,6 @@ check_services() {
     
     # Check service connectivity
     print_message "$YELLOW" "🔍 Checking service connectivity..."
-    
-    # Check MongoDB
-    if docker exec $(docker ps -q -f name=mongo) mongosh --eval "db.adminCommand('ping')" > /dev/null 2>&1; then
-        print_message "$GREEN" "✅ MongoDB is accessible"
-    else
-        print_message "$RED" "❌ MongoDB is not accessible"
-    fi
     
     # Check Backend
     if curl -s "http://$JENKINS_HOST:$BACKEND_PORT/health" | grep -q "UP"; then

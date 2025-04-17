@@ -7,7 +7,7 @@ set -e
 DOCKER_USERNAME=${DOCKER_USERNAME:-"xanderbilla"}
 VERSION_FILE="version.txt"
 STACK_NAME="devops-backend-stack"
-COMPOSE_FILE="docker-compose.backend.yml"
+COMPOSE_FILE="docker-compose.yml"
 JENKINS_HOST=${JENKINS_HOST:-"localhost"}
 BACKEND_PORT="8500"
 MONGO_PORT="27017"

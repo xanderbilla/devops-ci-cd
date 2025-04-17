@@ -26,9 +26,8 @@ export default function Page() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // Get the text response instead of trying to parse JSON
-      const text = await response.text();
-      console.log("Health check response:", text);
+      const data = await response.json();
+      console.log("Health check response:", data);
 
       const status = response.status === 200 ? "200" : "500";
       setHealthStatus({
@@ -92,7 +91,9 @@ export default function Page() {
               Status: {healthStatus.status}
             </span>
           </div>
-          <div className="">Base URL: {process.env.NEXT_PUBLIC_API_URL}</div>
+          <div className="text-sm text-gray-600">
+            API URL: {process.env.NEXT_PUBLIC_API_URL}
+          </div>
           {error && <div className="text-red-500 text-sm">{error}</div>}
         </div>
       </div>

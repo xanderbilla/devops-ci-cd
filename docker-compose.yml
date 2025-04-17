@@ -29,8 +29,15 @@ services:
       - mongo
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/devopsdb
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_ADDRESS=${JENKINS_HOST:-localhost}
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8500/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     deploy:
       mode: replicated
       replicas: 1
@@ -47,9 +54,14 @@ services:
     depends_on:
       - backend
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8500
+      - NEXT_PUBLIC_API_URL=http://${JENKINS_HOST:-localhost}:8500
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     deploy:
       mode: replicated
       replicas: 1

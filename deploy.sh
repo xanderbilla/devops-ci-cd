@@ -5,12 +5,12 @@ set -e
 
 # Configuration
 DOCKER_USERNAME=${DOCKER_USERNAME:-"xanderbilla"}
-VERSION_FILE="version.txt"
 STACK_NAME="devops-stack"
 COMPOSE_FILE="docker-compose.yml"
 JENKINS_HOST=${JENKINS_HOST:-"localhost"}
 BACKEND_PORT="8500"
 FRONTEND_PORT="3000"
+IMAGE_TAG="latest"
 
 # Colors for output
 RED='\033[0;31m'
@@ -58,17 +58,6 @@ check_files() {
         exit 1
     fi
     print_message "$GREEN" "✅ Found Docker Compose file"
-}
-
-# Function to determine version/tag
-get_version() {
-    if [ -f "$VERSION_FILE" ]; then
-        IMAGE_TAG=$(cat "$VERSION_FILE")
-        print_message "$GREEN" "✅ Using version from file: $IMAGE_TAG"
-    else
-        IMAGE_TAG="latest"
-        print_message "$YELLOW" "⚠️ Version file not found. Using 'latest' tag"
-    fi
 }
 
 # Function to remove existing stack
@@ -160,12 +149,12 @@ main() {
     print_message "$YELLOW" "📦 Stack name: $STACK_NAME"
     print_message "$YELLOW" "👤 Docker username: $DOCKER_USERNAME"
     print_message "$YELLOW" "🌐 Jenkins host: $JENKINS_HOST"
+    print_message "$YELLOW" "🏷️  Using image tag: $IMAGE_TAG"
     
     # Run deployment steps
     check_docker
     init_swarm
     check_files
-    get_version
     remove_existing_stack
     deploy_stack
     check_services

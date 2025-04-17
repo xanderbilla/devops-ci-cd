@@ -89,6 +89,8 @@ wait_for_service() {
             return 0
         fi
         print_message "$YELLOW" "Attempt $attempt/$max_attempts: $service_name is not ready yet..."
+        print_message "$YELLOW" "Checking logs for $service_name..."
+        docker service logs "$STACK_NAME"_$service_name --tail 20
         sleep 5
         attempt=$((attempt + 1))
     done
@@ -127,12 +129,15 @@ check_services() {
     print_message "$YELLOW" "🔍 Checking service connectivity..."
     
     # Check Backend
-    if curl -s "http://$JENKINS_HOST:$BACKEND_PORT/health" | grep -q "UP"; then
+    print_message "$YELLOW" "Testing backend health endpoint..."
+    if curl -s "http://$JENKINS_HOST:$BACKEND_PORT/actuator/health" | grep -q "UP"; then
         print_message "$GREEN" "✅ Backend is accessible"
     else
         print_message "$RED" "❌ Backend is not accessible"
         print_message "$YELLOW" "Checking backend logs for more information..."
-        docker service logs "$STACK_NAME"_backend
+        docker service logs "$STACK_NAME"_backend --tail 50
+        print_message "$YELLOW" "Testing backend connectivity..."
+        curl -v "http://$JENKINS_HOST:$BACKEND_PORT/actuator/health"
     fi
     
     # Check Frontend

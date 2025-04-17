@@ -138,6 +138,13 @@ check_services() {
         docker service logs "$STACK_NAME"_backend --tail 50
         print_message "$YELLOW" "Testing backend connectivity..."
         curl -v "http://$JENKINS_HOST:$BACKEND_PORT/actuator/health"
+        
+        # Try to exec into the container and check the health endpoint directly
+        print_message "$YELLOW" "Checking health endpoint from inside the container..."
+        CONTAINER_ID=$(docker ps -q -f name=backend)
+        if [ ! -z "$CONTAINER_ID" ]; then
+            docker exec $CONTAINER_ID wget -q -O- http://localhost:8080/actuator/health
+        fi
     fi
     
     # Check Frontend

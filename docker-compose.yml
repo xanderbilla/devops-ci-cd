@@ -30,8 +30,8 @@ services:
       - "3000:80"
     depends_on:
       - backend
-    environment:
-      - NEXT_PUBLIC_API_URL=http://${JENKINS_HOST:-localhost}:8500
+    # environment:
+    #   - NEXT_PUBLIC_API_URL=http://${JENKINS_HOST:-localhost}:8500
     networks:
       - app-network
     healthcheck:

@@ -20,7 +20,8 @@ export default function Page() {
   const checkHealth = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/health`);
+      const response = await fetch("http://13.235.247.107:8500/health");
+      // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/health`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -92,7 +93,7 @@ export default function Page() {
               Status: {healthStatus.status}
             </span>
           </div>
-          <div className="">Base URL: {process.env.NEXT_PUBLIC_API_URL}</div>
+          {/* <div className="">Base URL: {process.env.NEXT_PUBLIC_API_URL}</div> */}
           {error && <div className="text-red-500 text-sm">{error}</div>}
         </div>
       </div>

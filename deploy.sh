@@ -132,10 +132,14 @@ check_services() {
     print_message "$YELLOW" "Waiting for services to be fully ready..."
     sleep 10
     
+    # Get container IDs
+    BACKEND_CONTAINER=$(docker ps -q -f name=backend)
+    FRONTEND_CONTAINER=$(docker ps -q -f name=frontend)
+    
     # Check Backend with retries
     print_message "$YELLOW" "Testing backend health endpoint..."
     for i in {1..3}; do
-        if curl -s --max-time 5 "http://localhost:$BACKEND_PORT/actuator/health" > /dev/null; then
+        if docker exec $BACKEND_CONTAINER wget -q -O- http://localhost:8080/actuator/health > /dev/null; then
             print_message "$GREEN" "✅ Backend is accessible"
             break
         else
@@ -150,7 +154,7 @@ check_services() {
     
     # Check Frontend with retries
     for i in {1..3}; do
-        if curl -s --max-time 5 "http://localhost:$FRONTEND_PORT" > /dev/null; then
+        if docker exec $FRONTEND_CONTAINER wget -q -O- http://localhost:80 > /dev/null; then
             print_message "$GREEN" "✅ Frontend is accessible"
             break
         else

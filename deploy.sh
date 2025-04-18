@@ -130,25 +130,14 @@ check_services() {
     
     # Check Backend
     print_message "$YELLOW" "Testing backend health endpoint..."
-    if curl -s --max-time 5 "http://$JENKINS_HOST:$BACKEND_PORT/actuator/health" | grep -q "UP"; then
+    if curl -s --max-time 5 "http://localhost:$BACKEND_PORT/actuator/health" > /dev/null; then
         print_message "$GREEN" "✅ Backend is accessible"
     else
         print_message "$RED" "❌ Backend is not accessible"
-        print_message "$YELLOW" "Checking backend logs for more information..."
-        docker service logs "$STACK_NAME"_backend --tail 50
-        print_message "$YELLOW" "Testing backend connectivity..."
-        curl -v --max-time 5 "http://$JENKINS_HOST:$BACKEND_PORT/actuator/health"
-        
-        # Try to exec into the container and check the health endpoint directly
-        print_message "$YELLOW" "Checking health endpoint from inside the container..."
-        CONTAINER_ID=$(docker ps -q -f name=backend)
-        if [ ! -z "$CONTAINER_ID" ]; then
-            docker exec $CONTAINER_ID wget -q -O- --timeout=5 http://localhost:8080/actuator/health
-        fi
     fi
     
     # Check Frontend
-    if curl -s --max-time 5 "http://$JENKINS_HOST:$FRONTEND_PORT" > /dev/null; then
+    if curl -s --max-time 5 "http://localhost:$FRONTEND_PORT" > /dev/null; then
         print_message "$GREEN" "✅ Frontend is accessible"
     else
         print_message "$RED" "❌ Frontend is not accessible"

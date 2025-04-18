@@ -128,20 +128,40 @@ check_services() {
     # Check service connectivity
     print_message "$YELLOW" "🔍 Checking service connectivity..."
     
-    # Check Backend
-    print_message "$YELLOW" "Testing backend health endpoint..."
-    if curl -s --max-time 5 "http://localhost:$BACKEND_PORT/actuator/health" > /dev/null; then
-        print_message "$GREEN" "✅ Backend is accessible"
-    else
-        print_message "$RED" "❌ Backend is not accessible"
-    fi
+    # Wait for services to be fully ready
+    print_message "$YELLOW" "Waiting for services to be fully ready..."
+    sleep 10
     
-    # Check Frontend
-    if curl -s --max-time 5 "http://localhost:$FRONTEND_PORT" > /dev/null; then
-        print_message "$GREEN" "✅ Frontend is accessible"
-    else
-        print_message "$RED" "❌ Frontend is not accessible"
-    fi
+    # Check Backend with retries
+    print_message "$YELLOW" "Testing backend health endpoint..."
+    for i in {1..3}; do
+        if curl -s --max-time 5 "http://localhost:$BACKEND_PORT/actuator/health" > /dev/null; then
+            print_message "$GREEN" "✅ Backend is accessible"
+            break
+        else
+            if [ $i -eq 3 ]; then
+                print_message "$RED" "❌ Backend is not accessible"
+            else
+                print_message "$YELLOW" "Retrying backend check in 5 seconds..."
+                sleep 5
+            fi
+        fi
+    done
+    
+    # Check Frontend with retries
+    for i in {1..3}; do
+        if curl -s --max-time 5 "http://localhost:$FRONTEND_PORT" > /dev/null; then
+            print_message "$GREEN" "✅ Frontend is accessible"
+            break
+        else
+            if [ $i -eq 3 ]; then
+                print_message "$RED" "❌ Frontend is not accessible"
+            else
+                print_message "$YELLOW" "Retrying frontend check in 5 seconds..."
+                sleep 5
+            fi
+        fi
+    done
 
     print_message "$GREEN" "✅ Service connectivity check completed"
 }

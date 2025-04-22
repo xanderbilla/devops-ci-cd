@@ -1,171 +1,86 @@
-# DevOps Project
+# Event Management System - DevOps Demo
 
-A full-stack application with Spring Boot backend and Next.js 15.3 frontend, containerized with Docker and deployed using Docker Compose.
+A modern event management platform demonstrating DevOps best practices, built with Spring Boot and Next.js 15, containerized with Docker, and deployed using Docker Swarm.
 
-## 🚀 Features
+## 🎯 What's This Project About?
 
-- Spring Boot backend with RESTful APIs
-- Next.js 15.3 frontend with modern UI
-- MongoDB database integration
-- Docker containerization
-- Automated build and deployment scripts
-- Version tracking system
+This project showcases how to build and deploy a modern web application using industry-standard DevOps practices. While the application itself is an event management system, the focus is on demonstrating:
 
-## 📁 Project Structure
+- Containerization with Docker
+- Orchestration using Docker Swarm
+- CI/CD implementation with Jenkins
+- Cloud deployment strategies
+- Infrastructure as Code principles
 
-```
-.
-├── backend/           # Spring Boot application
-├── frontend/         # Next.js 15.3 application
-├── build-and-push.sh # Script to build and push Docker images
-├── deploy.sh         # Script to deploy the application
-├── docker-compose.yml# Docker Compose configuration
-└── version.txt       # Version tracking file
-```
+## 🛠️ Tech Stack
 
-## ⚙️ Prerequisites
+### Application
 
-- Docker and Docker Compose
-- Docker Hub account
-- Git (optional)
-- Node.js v20 (for local frontend development)
-- Java 17+ (for local backend development)
+- **Frontend**: Next.js 15, TypeScript, Tailwind CSS
+- **Backend**: Spring Boot 3, MongoDB Atlas
+- **Future**: AWS, Redis, WebSocket
 
-## 🛠️ Local Development Setup
+### DevOps
 
-### Backend Setup
+- Docker & Docker Swarm
+- Jenkins CI/CD
+- Maven & GitHub Actions
+- Infrastructure as Code (planned)
 
-1. Navigate to the backend directory
-2. Run the Spring Boot application:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
+## 🚀 Quick Start
 
-### Frontend Setup
-
-1. Navigate to the frontend directory
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-## 🐳 Docker Setup
-
-1. Edit the `build-and-push.sh` script to set your Docker Hub username:
+1. **Prerequisites**
 
    ```bash
-   DOCKER_USERNAME="your-dockerhub-username"
+   # Required tools
+   - Docker & Docker Compose
+   - Node.js v20
+   - Java 17+
+   - MongoDB Atlas account
    ```
 
-2. Login to Docker Hub:
+2. **Local Development**
+
    ```bash
-   docker login
+   # Backend
+   cd backend && ./mvnw spring-boot:run
+
+   # Frontend
+   cd frontend && npm install && npm run dev
    ```
 
-## 🏗️ Building and Pushing Images
-
-To build and push the Docker images to Docker Hub:
-
-```bash
-# On Linux/Mac
-./build-and-push.sh
-
-# On Windows (PowerShell)
-.\build-and-push.sh
-```
-
-The script will:
-
-1. Create/update the version file
-2. Increment the version number
-3. Build both backend and frontend images
-4. Tag images with `latest` and version number
-5. Push all images to Docker Hub
-
-## 🚀 Deployment
-
-To deploy the application:
-
-```bash
-# On Linux/Mac
-./deploy.sh
-
-# On Windows (PowerShell)
-.\deploy.sh
-```
-
-Custom deployment with specific username and tag:
-
-```bash
-# On Linux/Mac
-DOCKER_USERNAME=myusername IMAGE_TAG=1.0.0 ./deploy.sh
-
-# On Windows (PowerShell)
-$env:DOCKER_USERNAME="myusername"; $env:IMAGE_TAG="1.0.0"; .\deploy.sh
-```
-
-## 🌐 Application Access
-
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8080
-- MongoDB: localhost:27017
-- API Documentation: http://localhost:8080/swagger-ui.html
-
-## 🔍 Troubleshooting
-
-### Docker Build Issues
-
-1. Verify Node.js version (v20 required for Next.js 15.3)
-2. Check for required files in project directories
-3. Validate Next.js configuration
-4. Ensure Docker daemon is running
-5. Check available disk space
-
-### Deployment Issues
-
-1. Verify Docker Hub image accessibility
-2. Check version.txt matches existing image tags
-3. Inspect Docker logs:
+3. **Docker Deployment**
    ```bash
-   docker-compose logs
+   # Build and deploy
+   ./cleanup.sh
+   ./build-and-push.sh
+   ./deploy.sh
    ```
-4. Check container status:
-   ```bash
-   docker-compose ps
-   ```
 
-### Common Issues
+## 🔄 CI/CD Pipeline
 
-1. **Port Conflicts**
+Our Jenkins pipeline automates:
 
-   - Ensure ports 3000, 8080, and 27017 are available
-   - Check for running services on these ports
+- Code testing and building
+- Docker image creation
+- Automated deployment
+- Health monitoring
+- Rolling updates
 
-2. **Memory Issues**
+## 📈 What's Next?
 
-   - Increase Docker memory limit if builds fail
-   - Check system resources
+We're working on:
 
-3. **Network Issues**
-   - Verify Docker network connectivity
-   - Check firewall settings
-
-## 📝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+- AWS cloud integration
+- Redis caching
+- Real-time features
+- Advanced monitoring
+- Infrastructure as code
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🤝 Support
+## 👤 Author
 
-For support, please open an issue in the repository or contact the maintainers.
+[Vikas Singh](https://xanderbilla.com)

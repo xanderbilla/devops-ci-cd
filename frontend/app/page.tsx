@@ -2,11 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-
-type HealthStatus = {
-  status: "200" | "500";
-  timestamp: string;
-};
+import { HealthStatus, healthApi } from "./api/healthApi";
 
 export default function Page() {
   const [healthStatus, setHealthStatus] = useState<HealthStatus>({
@@ -20,31 +16,12 @@ export default function Page() {
   const checkHealth = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("http://13.235.247.107:8500/health");
-      // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/health`);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      // Get the text response instead of trying to parse JSON
-      const text = await response.text();
-      console.log("Health check response:", text);
-
-      const status = response.status === 200 ? "200" : "500";
-      setHealthStatus({
-        status,
-        timestamp: new Date().toISOString(),
-      });
-      statusRef.current = status;
+      const status = await healthApi.checkHealth();
+      setHealthStatus(status);
+      statusRef.current = status.status;
       setError(null);
     } catch (error) {
       console.error("Health check error:", error);
-      setHealthStatus({
-        status: "500",
-        timestamp: new Date().toISOString(),
-      });
-      statusRef.current = "500";
       setError("Failed to fetch health status");
     } finally {
       setIsLoading(false);

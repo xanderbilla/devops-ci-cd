@@ -1,11 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-
-interface Person {
-  name: string;
-  age: number;
-}
+import { Person, personApi } from "../api/personApi";
 
 export default function ProfilePage() {
   const [persons, setPersons] = useState<Person[]>([]);
@@ -15,13 +11,7 @@ export default function ProfilePage() {
 
   const fetchPersons = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/persons`
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
+      const data = await personApi.getAllPersons();
       setPersons(data);
       setError(null);
     } catch (error) {
@@ -35,21 +25,7 @@ export default function ProfilePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/persons`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newPerson),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
+      await personApi.createPerson(newPerson);
       // Reset form and refresh the list
       setNewPerson({ name: "", age: 0 });
       fetchPersons();

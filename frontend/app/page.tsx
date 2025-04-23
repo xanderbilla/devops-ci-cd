@@ -58,8 +58,7 @@ export default function Page() {
             </button>
           </div>
         </div>
-
-        <h1> This took so long</h1>
+        <h1> Test pass ;)</h1>
 
         <div className="space-y-4">
           <div className="flex items-center space-x-3">
